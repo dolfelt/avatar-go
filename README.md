@@ -16,6 +16,15 @@ _Dependencies are managed by [godep](https://github.com/tools/godep)._
 * Create `./config.json` using the example and fill in the details.
 * Run the server `./bin/avatar-go` and visit http://localhost:3000
 
+### Install
+
+* Install [PostgreSQL](http://www.postgresql.org/download/) and configure with a database.
+* Move `avatar-go` and `avatar-config` binaries to hosting server, along with `config.json` and add all configuration details.
+* Run `./avatar-config install` to setup the database tables.
+* Run `./avatar-config setdefault <file>` to upload a default avatar.
+* Install `nginx` or other service to proxy requests to port 3000.
+
+
 ### Contributing
 
 * Develop some awesome code.
