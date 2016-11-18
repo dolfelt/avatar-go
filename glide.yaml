@@ -1,0 +1,30 @@
+package: github.com/dolfelt/avatar-go
+import:
+- package: github.com/dgrijalva/jwt-go
+  version: c48cfd5d9711c75acb6036d2698ef3aef7bb655a
+- package: github.com/disintegration/imaging
+  version: 3ab6ec550f20d497d2755ed3c48a3e45ad6b7eb9
+- package: github.com/gocraft/web
+  version: 0685b3269525eb63673b92f2a0681653b701fb72
+- package: github.com/lib/pq
+  version: a33d6053e025943d5dc89dfa1f35fe5500618df7
+  subpackages:
+  - oid
+- package: golang.org/x/image
+  version: 697863cec6564958b27cfcef039bdb04324c2ec8
+  subpackages:
+  - bmp
+  - tiff
+  - tiff/lzw
+- package: gopkg.in/amz.v1
+  version: ^1.0.0
+  subpackages:
+  - aws
+  - s3
+- package: github.com/gin-gonic/gin
+  version: ^1.0.0
+- package: github.com/jinzhu/gorm
+  version: ^1.0.0
+- package: github.com/spf13/cobra
+- package: github.com/spf13/pflag
+- package: github.com/spf13/viper

@@ -1,18 +1,12 @@
 {
-  "aws": {
-    "key": "",
-    "secret": "",
-    "bucket": "s3-bucket.example.com"
-  },
-  "db": {
-    "user": "root",
-    "password": "",
-    "host": "localhost",
-    "port": "5432",
-    "database": "avatars"
-  },
-  "default_avatar": {
-    "info": "run ./install.sh setdefault <file> to upload a default avatar"
-  },
-  "jwt_key": "your-signing-key"
+  "AwsKey": "",
+  "AwsSecret": "",
+  "AwsBucket": "s3-bucket.example.com",
+  "DBUser": "docker",
+  "DBPassword": "docker",
+  "DBHost": "db",
+  "DBPort": "5432",
+  "DBDatabase": "avatars",
+  "DefaultAvatar": "run ./install.sh setdefault <file> to upload a default avatar"
+  "JwtKey": "your-signing-key"
 }

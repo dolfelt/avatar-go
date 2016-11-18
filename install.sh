@@ -5,7 +5,7 @@ GREEN='\033[0;32m'
 GRAY='\033[0;37m'
 NC='\033[0m' # No Color
 
-GOPATH=`godep path`:$GOPATH
+# GOPATH=`godep path`:$GOPATH
 
 if [ $1 == "run" ]; then
   go build -o bin/avatar-go ./ && ./bin/avatar-go --debug

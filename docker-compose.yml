@@ -1,0 +1,23 @@
+web:
+  build: .
+  environment:
+    AVATAR_AWSBUCKET: bucket.example.com
+    AVATAR_DBHOST: db
+    AVATAR_PORT: 5000
+  command: ./bin/avatar serve
+  ports:
+    - 3000:3000
+  links:
+    - db
+  volumes:
+    - .:/go/src/github.com/dolfelt/avatar-go
+db:
+  image: postgres
+  environment:
+    POSTGRES_USER: docker
+    POSTGRES_PASSWORD: docker
+    POSTGRES_DB: avatars
+  ports:
+    - 5432:5432
+  expose:
+    - 5432

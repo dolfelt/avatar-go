@@ -1,0 +1,20 @@
+machine:
+  services:
+    - docker
+
+dependencies:
+  override:
+    - docker info
+    - docker build --rm=false -t dolfelt/avatar-go:$CIRCLE_BRANCH .
+    - TAG=$CIRCLE_BRANCH make prepare-docker
+
+test:
+  override:
+    - TAG=$CIRCLE_BRANCH make test-docker
+
+deployment:
+  hub:
+    branch: master
+    commands:
+      - docker login -u $DOCKER_USER -p $DOCKER_PASS
+      - docker push dolfelt/avatar-go:$CIRCLE_BRANCH

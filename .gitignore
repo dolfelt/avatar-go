@@ -1,2 +1,5 @@
 config.json
 /bin
+/vendor
+glide.lock
+.glide/

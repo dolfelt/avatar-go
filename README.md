@@ -8,13 +8,12 @@ Full specification documentation can be found [here](SPEC.md).
 
 ### Building
 
-_Dependencies are managed by [godep](https://github.com/tools/godep)._
+_Dependencies are managed by [Glide](https://github.com/Masterminds/glide)._
 
 * Make sure to install Go ([here](https://golang.org/doc/install#osx) or `brew install go`)
-* Install godep `$ go get github.com/tools/godep`
-* Run `./install.sh build`
-* Create `./config.json` using the example and fill in the details.
-* Run the server `./bin/avatar-go` and visit http://localhost:3000
+* Install Glide
+* Run `make prepare && make build`
+* Run the server `./bin/avatar` and visit http://localhost:3000
 
 ### Install
 
