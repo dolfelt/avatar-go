@@ -38,6 +38,7 @@ func loadDefaultSettings() {
 	viper.SetDefault("DBUser", "docker")
 	viper.SetDefault("DBPassword", "docker")
 	viper.SetDefault("DBDatabase", "avatars")
+	viper.SetDefault("DBHost", "localhost")
 	viper.SetDefault("DBPort", 5432)
 	viper.SetDefault("Port", 3000)
 	viper.SetDefault("Debug", false)
@@ -91,7 +92,7 @@ func Retry(attempts int, callback func() error) (err error) {
 
 		time.Sleep(2 * time.Second)
 
-		log.Println("retrying...")
+		log.Println("retrying...", err)
 	}
 	return fmt.Errorf("after %d attempts, last error: %s", attempts, err)
 }

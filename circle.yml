@@ -5,7 +5,7 @@ machine:
 dependencies:
   override:
     - docker info
-    - docker build --rm=false -t dolfelt/avatar-go:$CIRCLE_BRANCH .
+    - docker build --rm=false -t dolfelt/avatar-go-local:$CIRCLE_BRANCH .
     - TAG=$CIRCLE_BRANCH make prepare-docker
 
 test:
@@ -16,5 +16,6 @@ deployment:
   hub:
     branch: master
     commands:
-      - docker login -u $DOCKER_USER -p $DOCKER_PASS
-      - docker push dolfelt/avatar-go:$CIRCLE_BRANCH
+      - BUILD=${CIRCLE_TAG:-latest} TAG=$CIRCLE_BRANCH make package
+      - docker login -e $DOCKER_EMAIL -u $DOCKER_USER -p $DOCKER_PASS
+      - docker push dolfelt/avatar-go:${CIRCLE_TAG:-latest}

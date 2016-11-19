@@ -15,14 +15,12 @@ _Dependencies are managed by [Glide](https://github.com/Masterminds/glide)._
 * Run `make prepare && make build`
 * Run the server `./bin/avatar` and visit http://localhost:3000
 
-### Install
+### Developing
 
-* Install [PostgreSQL](http://www.postgresql.org/download/) and configure with a database.
-* Move `avatar-go` and `avatar-config` binaries to hosting server, along with `config.json` and add all configuration details.
-* Run `./avatar-config install` to setup the database tables.
-* Run `./avatar-config setdefault <file>` to upload a default avatar.
-* Install `nginx` or other service to proxy requests to port 3000.
-
+* Install [Docker](https://docs.docker.com/).
+* Run `make up`
+* Run `make run`
+* Visit http://localhost:3000
 
 ### Contributing
 
