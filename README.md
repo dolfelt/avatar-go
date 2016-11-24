@@ -1,10 +1,21 @@
-## GoAvatar
+# Avatar Go
+[![CircleCI](https://circleci.com/gh/dolfelt/avatar-go.svg?style=shield)](https://circleci.com/gh/dolfelt/avatar-go)
+[![Go Report Card](https://goreportcard.com/badge/github.com/dolfelt/avatar-go)](https://goreportcard.com/report/github.com/dolfelt/avatar-go)
+[![GoDoc](https://godoc.org/github.com/dolfelt/avatar-go?status.svg)](https://godoc.org/github.com/dolfelt/avatar-go)
 
 An avatar micro-service written in Go. Simple, fast and ... simple, oh, and fast!
 
-### Specification
+## Specification
 
 Full specification documentation can be found [here](SPEC.md).
+
+## Using
+
+New docker images are automatically built. Check out the [examples](examples/)
+section to see how to use it with Docker Compose, or even
+with [Hyper.sh](http://hyper.sh).
+
+## Developing
 
 ### Building
 
@@ -15,21 +26,16 @@ _Dependencies are managed by [Glide](https://github.com/Masterminds/glide)._
 * Run `make prepare && make build`
 * Run the server `./bin/avatar` and visit http://localhost:3000
 
-### Developing
+### Running
 
 * Install [Docker](https://docs.docker.com/).
 * Run `make up`
 * Run `make run`
 * Visit http://localhost:3000
 
-### Contributing
+## Contributing
 
-* Develop some awesome code.
-* Run `./install.sh run` to test it out.
+* Develop some awesome code with unit tests.
+* Run `make test` to test it out.
 * Commit code and create a pull request.
 * Relax with a :beer:.
-
-### Deploying (for Linux)
-* Change dir to the `src/` directory under the `$GOROOT`
-* Make linux dependencies `GOOS=linux GOARCH=amd64 CGO_ENABLED=1 ./make.bash --no-clean`
-* Build for deployment `GOOS=linux GOARCH=amd64 go build -o avatar-go`

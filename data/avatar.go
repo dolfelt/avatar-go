@@ -12,12 +12,12 @@ type Sizes []string
 
 // Avatar stores the data for each object
 type Avatar struct {
-	Hash      string    `gorm:"type:varchar(40);not null;primary_key"` // hash identifier of the object
-	Type      string    `gorm:"type:char(4);not null"`                 // file extension of the avatar
-	SizesRaw  string    `gorm:"column:sizes;type:json;not null"`       // list of available sizes
-	Sizes     Sizes     `gorm:"-" sql:"-"`                             // list of available sizes
-	CreatedAt time.Time // when the avatar was first created
-	UpdatedAt time.Time // last update of the avatar
+	Hash      string    `gorm:"type:varchar(40);not null;primary_key" json:"hash"` // hash identifier of the object
+	Type      string    `gorm:"type:char(4);not null" json:"type"`                 // file extension of the avatar
+	SizesRaw  string    `gorm:"column:sizes;type:json;not null" json:"-"`          // list of available sizes
+	Sizes     Sizes     `gorm:"-" sql:"-" json:"sizes"`                            // list of available sizes
+	CreatedAt time.Time `json:"createdAt"`                                         // when the avatar was first created
+	UpdatedAt time.Time `json:"updatedAt"`                                         // last update of the avatar
 }
 
 // FindAvatar searches the database for an avatar object
