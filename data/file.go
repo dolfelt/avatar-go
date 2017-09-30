@@ -6,8 +6,8 @@ import (
 	"image/gif"
 	"image/jpeg"
 	"image/png"
+	"io"
 	"log"
-	"mime/multipart"
 	"net/http"
 
 	"github.com/disintegration/imaging"
@@ -21,7 +21,7 @@ import (
 type FileData map[string]string
 
 // GetFileExt gets the formatted extension of the supported image file
-func GetFileExt(file multipart.File) (string, error) {
+func GetFileExt(file io.ReadSeeker) (string, error) {
 	buff := make([]byte, 512) // 512 bytes because --> http://golang.org/pkg/net/http/#DetectContentType
 	_, err := file.Read(buff)
 
@@ -48,11 +48,15 @@ func GetFileExt(file multipart.File) (string, error) {
 }
 
 // GetUploadedFile returns the file that was attempted to be uploaded
-func GetUploadedFile(c *gin.Context) (*multipart.File, string, error) {
-
+func GetUploadedFile(c *gin.Context) (io.ReadSeeker, string, error) {
+	var file io.ReadSeeker
 	file, _, err := c.Request.FormFile("avatar")
 	if err != nil {
-		return nil, "", err
+		b, errb := c.GetRawData()
+		if errb != nil {
+			return nil, "", err
+		}
+		file = bytes.NewReader(b)
 	}
 
 	ext, err := GetFileExt(file)
@@ -60,14 +64,12 @@ func GetUploadedFile(c *gin.Context) (*multipart.File, string, error) {
 		return nil, "", err
 	}
 
-	return &file, ext, nil
+	return file, ext, nil
 }
 
 // ProcessImageUpload processes uploaded images into the appropriate size
-func ProcessImageUpload(app *Application, avatar Avatar, file multipart.File) (FileData, error) {
+func ProcessImageUpload(app *Application, avatar Avatar, file io.ReadSeeker) (FileData, error) {
 	files := make(FileData, 0)
-
-	defer file.Close()
 
 	if img, _, err := image.Decode(file); err == nil {
 		file.Seek(0, 0)
@@ -78,7 +80,7 @@ func ProcessImageUpload(app *Application, avatar Avatar, file multipart.File) (F
 
 		// Loop through all the sizes and create the avatars
 		for size, pixels := range DefaultSizes {
-			if maxSize < pixels {
+			if maxSize < pixels && size != "small" {
 				if app.Debug {
 					log.Println("Skipping size:", size)
 				}

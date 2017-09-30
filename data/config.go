@@ -42,6 +42,7 @@ func loadDefaultSettings() {
 	viper.SetDefault("DBPort", 5432)
 	viper.SetDefault("Port", 3000)
 	viper.SetDefault("Debug", false)
+	viper.SetDefault("TableName", "avatars")
 }
 
 // DefaultSizes is the list of sizes

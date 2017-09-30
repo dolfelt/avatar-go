@@ -29,7 +29,7 @@ func write(app *data.Application) gin.HandlerFunc {
 			Hash: hash,
 			Type: ext,
 		}
-		data, err := data.ProcessImageUpload(app, newAvatar, *file)
+		data, err := data.ProcessImageUpload(app, newAvatar, file)
 
 		if err != nil {
 			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})

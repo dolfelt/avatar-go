@@ -5,6 +5,8 @@ import (
 	"log"
 	"strconv"
 	"time"
+
+	"github.com/spf13/viper"
 )
 
 // Sizes is the available sizes for an avatar object.
@@ -14,10 +16,14 @@ type Sizes []string
 type Avatar struct {
 	Hash      string    `gorm:"type:varchar(40);not null;primary_key" json:"hash"` // hash identifier of the object
 	Type      string    `gorm:"type:char(4);not null" json:"type"`                 // file extension of the avatar
-	SizesRaw  string    `gorm:"column:sizes;type:json;not null" json:"-"`          // list of available sizes
+	SizesRaw  string    `gorm:"column:sizes;type:text;not null" json:"-"`          // list of available sizes
 	Sizes     Sizes     `gorm:"-" sql:"-" json:"sizes"`                            // list of available sizes
 	CreatedAt time.Time `json:"createdAt"`                                         // when the avatar was first created
 	UpdatedAt time.Time `json:"updatedAt"`                                         // last update of the avatar
+}
+
+func (Avatar) TableName() string {
+	return viper.GetString("TableName")
 }
 
 // FindAvatar searches the database for an avatar object
@@ -32,7 +38,6 @@ func FindAvatar(db *DB, hash string) *Avatar {
 	}
 
 	// Parse JSON sizes array
-	// sizes := make(Sizes, 0)
 	json.Unmarshal([]byte(avatar.SizesRaw), &avatar.Sizes)
 
 	return &avatar

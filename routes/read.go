@@ -69,7 +69,7 @@ func options(app *data.Application) gin.HandlerFunc {
 		hash := c.Param("hash")
 		avatar := data.FindAvatar(app.DB, hash)
 		if avatar == nil {
-			c.JSON(http.StatusNotFound, gin.H{"msg": "no matching avatar found", "hash": hash})
+			c.JSON(200, gin.H{"msg": "no matching avatar found", "hash": hash})
 			return
 		}
 		methods := []string{"HEAD", "GET", "POST", "DELETE"}

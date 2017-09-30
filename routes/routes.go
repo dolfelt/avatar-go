@@ -6,6 +6,7 @@ Handles all the rounting and web requests coming in
 
 import (
 	"github.com/dolfelt/avatar-go/data"
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 )
 
@@ -20,7 +21,7 @@ func configRouter(router *gin.Engine, app *data.Application) *gin.Engine {
 	// GetRouter returns the router with all the routes defined
 	router.Use(gin.Logger())
 	router.Use(gin.Recovery())
-	router.Use(CORSHeaders())
+	router.Use(cors.New(getCORSConfig()))
 
 	// Get endpoints for displaying the avatar
 	router.GET("/:hash", read(app))
@@ -39,7 +40,6 @@ func configRouter(router *gin.Engine, app *data.Application) *gin.Engine {
 	}
 
 	// Options endpoint for available methods
-	authRouter.OPTIONS("/:hash", options(app))
 	authRouter.POST("/:hash", write(app))
 	authRouter.DELETE("/:hash", delete(app))
 

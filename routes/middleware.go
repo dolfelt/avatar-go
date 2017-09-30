@@ -4,19 +4,17 @@ import (
 	"fmt"
 
 	jwt "github.com/dgrijalva/jwt-go"
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"github.com/spf13/viper"
 )
 
-// CORSHeaders allows for cross-origin requests against the API
-func CORSHeaders() gin.HandlerFunc {
-	return func(c *gin.Context) {
-		c.Header("Access-Control-Allow-Origin", "*")
-		c.Header("Access-Control-Allow-Headers", "Content-Type, Cache-Control")
-		c.Header("Access-Control-Allow-Methods", "GET,HEAD,POST,DELETE,OPTIONS")
-
-		c.Next()
-	}
+func getCORSConfig() cors.Config {
+	corsConfig := cors.DefaultConfig()
+	corsConfig.AllowAllOrigins = true
+	corsConfig.AllowMethods = []string{"GET", "POST", "PUT", "HEAD", "DELETE"}
+	corsConfig.AllowHeaders = []string{"Origin", "Content-Length", "Content-Type", "Cache-Control"}
+	return corsConfig
 }
 
 // AuthRequired detects if a JWT token has been sent with the request and
