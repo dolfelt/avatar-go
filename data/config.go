@@ -10,7 +10,7 @@ import (
 
 // Application holds all the info for the app
 type Application struct {
-	DB    *DB
+	DB    DB
 	Debug bool
 }
 

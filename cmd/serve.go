@@ -27,10 +27,10 @@ func serveLoadConfig() *data.Application {
 	if configErr != nil {
 		log.Println(configErr)
 	}
-	var db *data.DB
+	db := &data.PostgresDB{}
 	err := data.Retry(10, func() error {
 		var err error
-		db, err = data.Connect()
+		err = db.Connect()
 		return err
 	})
 
@@ -51,7 +51,8 @@ func serveRun(cmd *cobra.Command, args []string) {
 		fmt.Println("Debugging mode enabled.")
 	}
 
-	app.DB.AutoMigrate(&data.Avatar{})
+	app.DB.Migrate()
+
 	router := routes.Register(app)
 
 	router.Run(viper.GetString("IPAddress") + ":" + viper.GetString("Port"))
