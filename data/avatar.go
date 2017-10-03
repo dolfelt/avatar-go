@@ -28,23 +28,21 @@ func (Avatar) TableName() string {
 
 // FindAvatar searches the database for an avatar object
 // given a hash string
-func FindAvatar(db *DB, hash string) *Avatar {
-	var avatar Avatar
-
-	db.Find(&avatar, "hash = ?", hash)
-	if len(avatar.Hash) == 0 {
-		log.Printf("Cannot find avatar with hash %s", hash)
+func FindAvatar(db DB, hash string) *Avatar {
+	avatar, err := db.FindByHash(hash)
+	if err != nil {
+		log.Printf("Error finding avatar %s %s", hash, err)
 		return nil
 	}
 
 	// Parse JSON sizes array
 	json.Unmarshal([]byte(avatar.SizesRaw), &avatar.Sizes)
 
-	return &avatar
+	return avatar
 }
 
 // Save the avatar to the database
-func (a Avatar) Save(db *DB) error {
+func (a *Avatar) Save(db DB) error {
 
 	// Convert sizes to JSON for storage in the database
 	sizes, err := json.Marshal(a.Sizes)
@@ -52,17 +50,11 @@ func (a Avatar) Save(db *DB) error {
 		return err
 	}
 	a.SizesRaw = string(sizes)
-	res := db.Save(&a)
 
-	if res.Error != nil {
-		return res.Error
-	}
+	err = db.Save(a)
 
-	if res.RowsAffected == 0 {
-		res = db.Create(&a)
-		if res.Error != nil {
-			return res.Error
-		}
+	if err != nil {
+		return err
 	}
 
 	return nil
