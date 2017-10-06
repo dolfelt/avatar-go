@@ -27,7 +27,13 @@ func serveLoadConfig() *data.Application {
 	if configErr != nil {
 		log.Println(configErr)
 	}
-	db := &data.PostgresDB{}
+	var db data.DB
+	switch viper.GetString("Store") {
+	case "dynamodb":
+		db = &data.DynamoDB{}
+	default:
+		db = &data.PostgresDB{}
+	}
 	err := data.Retry(10, func() error {
 		var err error
 		err = db.Connect()

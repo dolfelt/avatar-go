@@ -35,14 +35,21 @@ func LoadConfig(path string) error {
 }
 
 func loadDefaultSettings() {
+	// PostgreSQL Config
 	viper.SetDefault("DBUser", "docker")
 	viper.SetDefault("DBPassword", "docker")
 	viper.SetDefault("DBDatabase", "avatars")
 	viper.SetDefault("DBHost", "localhost")
 	viper.SetDefault("DBPort", 5432)
+
+	// DynamoDB Config
+	viper.SetDefault("DynamoRegion", "us-east-1")
+
 	viper.SetDefault("Port", 3000)
 	viper.SetDefault("Debug", false)
 	viper.SetDefault("TableName", "avatars")
+
+	viper.SetDefault("Store", "postgres")
 }
 
 // DefaultSizes is the list of sizes

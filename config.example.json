@@ -2,6 +2,8 @@
   "AwsKey": "",
   "AwsSecret": "",
   "AwsBucket": "s3-bucket.example.com",
+  "Store": "postgres|dynamodb",
+  "TableName": "avatars",
   "DBUser": "docker",
   "DBPassword": "docker",
   "DBHost": "db",

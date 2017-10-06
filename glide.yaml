@@ -30,3 +30,6 @@ import:
 - package: github.com/spf13/viper
 - package: github.com/gin-contrib/cors
   version: ^1.2.0
+- package: github.com/guregu/dynamo
+- package: github.com/aws/aws-sdk-go
+  version: ^1.12.5
