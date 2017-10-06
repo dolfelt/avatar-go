@@ -1,6 +1,7 @@
 package data
 
 import (
+	"encoding/json"
 	"fmt"
 	"net/url"
 
@@ -11,6 +12,15 @@ import (
 // PostgresDB wraps the gorm DB interface
 type PostgresDB struct {
 	Gorm *gorm.DB
+}
+
+type AvatarPostgres struct {
+	Avatar
+	Sizes string `gorm:"column:sizes;type:text;not null" json:"-"` // list of available sizes
+}
+
+func (AvatarPostgres) TableName() string {
+	return viper.GetString("TableName")
 }
 
 // Connect begins the connection with the database
@@ -34,25 +44,37 @@ func (p *PostgresDB) Connect() error {
 }
 
 func (p *PostgresDB) FindByHash(hash string) (*Avatar, error) {
-	var avatar Avatar
+	var avatar AvatarPostgres
 
 	p.Gorm.Find(&avatar, "hash = ?", hash)
 	if len(avatar.Hash) == 0 {
 		return nil, fmt.Errorf("Cannot find avatar with hash %s", hash)
 	}
 
-	return &avatar, nil
+	// Unmarshal the JSON object into the struct
+	json.Unmarshal([]byte(avatar.Sizes), &avatar.Avatar.Sizes)
+
+	return &avatar.Avatar, nil
 }
 
 func (p *PostgresDB) Save(a *Avatar) error {
-	res := p.Gorm.Save(a)
+	// Convert sizes to JSON for storage in the database
+	sizes, err := json.Marshal(a.Sizes)
+	if err != nil {
+		return err
+	}
+	ap := &AvatarPostgres{
+		Avatar: *a,
+		Sizes:  string(sizes),
+	}
+	res := p.Gorm.Save(ap)
 
 	if res.Error != nil {
 		return res.Error
 	}
 
 	if res.RowsAffected == 0 {
-		res = p.Gorm.Create(a)
+		res = p.Gorm.Create(ap)
 		if res.Error != nil {
 			return res.Error
 		}
@@ -62,6 +84,6 @@ func (p *PostgresDB) Save(a *Avatar) error {
 }
 
 func (p *PostgresDB) Migrate() error {
-	p.Gorm.AutoMigrate(&Avatar{})
+	p.Gorm.AutoMigrate(&AvatarPostgres{})
 	return nil
 }

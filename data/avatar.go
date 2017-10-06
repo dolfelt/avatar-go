@@ -1,7 +1,6 @@
 package data
 
 import (
-	"encoding/json"
 	"log"
 	"strconv"
 	"time"
@@ -16,7 +15,6 @@ type Sizes []string
 type Avatar struct {
 	Hash      string    `gorm:"type:varchar(40);not null;primary_key" json:"hash"` // hash identifier of the object
 	Type      string    `gorm:"type:char(4);not null" json:"type"`                 // file extension of the avatar
-	SizesRaw  string    `gorm:"column:sizes;type:text;not null" json:"-"`          // list of available sizes
 	Sizes     Sizes     `gorm:"-" sql:"-" json:"sizes"`                            // list of available sizes
 	CreatedAt time.Time `json:"createdAt"`                                         // when the avatar was first created
 	UpdatedAt time.Time `json:"updatedAt"`                                         // last update of the avatar
@@ -35,23 +33,12 @@ func FindAvatar(db DB, hash string) *Avatar {
 		return nil
 	}
 
-	// Parse JSON sizes array
-	json.Unmarshal([]byte(avatar.SizesRaw), &avatar.Sizes)
-
 	return avatar
 }
 
 // Save the avatar to the database
 func (a *Avatar) Save(db DB) error {
-
-	// Convert sizes to JSON for storage in the database
-	sizes, err := json.Marshal(a.Sizes)
-	if err != nil {
-		return err
-	}
-	a.SizesRaw = string(sizes)
-
-	err = db.Save(a)
+	err := db.Save(a)
 
 	if err != nil {
 		return err
