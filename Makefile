@@ -2,7 +2,7 @@
 
 package = dolfelt/avatar-go
 container = $(package)-local:$${TAG:-latest}
-run_volume = docker run --rm -v `pwd`:/go/src/github.com/dolfelt/avatar-go $(container)
+run_volume = docker run --rm -v `pwd`:/go/src/github.com/dolfelt/avatar-go -w /go/src/github.com/dolfelt/avatar-go $(container)
 
 up start:
 	docker-compose up -d
