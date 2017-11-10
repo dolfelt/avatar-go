@@ -1,0 +1,7 @@
+FROM alpine:3.6
+
+RUN mkdir -p /config \
+ && apk add --no-cache ca-certificates && update-ca-certificates
+
+COPY bin/avatar /
+CMD ["/avatar", "serve"]

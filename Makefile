@@ -32,4 +32,4 @@ test:
 	go test $$(glide nv)
 
 package: build
-	docker build -t $(package):$${BUILD:-latest} -f Dockerfile.scratch .
+	docker build -t $(package):$${BUILD:-latest} -f Dockerfile.alpine .
