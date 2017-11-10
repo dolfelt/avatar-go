@@ -45,6 +45,9 @@ func loadDefaultSettings() {
 	// DynamoDB Config
 	viper.SetDefault("DynamoRegion", "us-east-1")
 
+	// S3 Storage Config
+	viper.SetDefault("AwsBucketRegion", "us-east-1")
+
 	viper.SetDefault("Port", 3000)
 	viper.SetDefault("Debug", false)
 	viper.SetDefault("TableName", "avatars")

@@ -10,11 +10,14 @@ import (
 	"log"
 	"net/http"
 
+	"github.com/aws/aws-sdk-go/aws"
+	"github.com/aws/aws-sdk-go/aws/credentials"
+	"github.com/aws/aws-sdk-go/aws/session"
+	"github.com/aws/aws-sdk-go/service/s3"
+	"github.com/aws/aws-sdk-go/service/s3/s3manager"
 	"github.com/disintegration/imaging"
 	"github.com/gin-gonic/gin"
 	"github.com/spf13/viper"
-	"gopkg.in/amz.v1/aws"
-	"gopkg.in/amz.v1/s3"
 )
 
 // FileData describes the file
@@ -101,7 +104,7 @@ func ProcessImageUpload(app *Application, avatar Avatar, file io.ReadSeeker) (Fi
 				break
 			}
 
-			if path, errs := uploadImageS3(app, avatar, buf.Bytes(), size); errs == nil {
+			if path, errs := uploadImageS3(app, avatar, buf, size); errs == nil {
 				files[size] = path
 			} else if app.Debug {
 				log.Println("Error uploading", size, errs)
@@ -114,27 +117,41 @@ func ProcessImageUpload(app *Application, avatar Avatar, file io.ReadSeeker) (Fi
 	return files, nil
 }
 
-func getS3Bucket() *s3.Bucket {
-	auth := aws.Auth{
-		AccessKey: viper.GetString("AWSKey"),
-		SecretKey: viper.GetString("AWSSecret"),
-	}
-	client := s3.New(auth, aws.USEast)
-	bucket := client.Bucket(viper.GetString("AWSBucket"))
-
-	return bucket
+func getBucketName() string {
+	return viper.GetString("AWSBucket")
 }
 
-func uploadImageS3(app *Application, avatar Avatar, data []byte, size string) (string, error) {
+func getS3() *s3.S3 {
+	awsConfig := &aws.Config{
+		Region: aws.String(viper.GetString("AwsBucketRegion")),
+	}
+	if viper.GetString("AwsKey") != "" {
+		awsConfig.Credentials = credentials.NewStaticCredentials(
+			viper.GetString("AwsKey"),
+			viper.GetString("AwsSecret"),
+			"",
+		)
+	}
+	return s3.New(session.Must(session.NewSession()), awsConfig)
+}
 
-	bucket := getS3Bucket()
+func uploadImageS3(app *Application, avatar Avatar, data io.Reader, size string) (string, error) {
+	up := s3manager.NewUploaderWithClient(getS3())
 
-	err := bucket.Put(avatar.GetPath(size), data, "image/"+avatar.Type, s3.PublicRead)
+	upParams := &s3manager.UploadInput{
+		Bucket:      aws.String(getBucketName()),
+		Key:         aws.String(avatar.GetPath(size)),
+		Body:        data,
+		ACL:         aws.String("public-read"),
+		ContentType: aws.String("image/" + avatar.Type),
+	}
+	result, err := up.Upload(upParams)
 	if err != nil {
 		return "", err
 	}
 
 	if app.Debug {
+		log.Printf("%#v\n", result)
 		log.Println("Uploaded size ", size, "to", avatar.GetPath(size))
 	}
 
@@ -143,13 +160,16 @@ func uploadImageS3(app *Application, avatar Avatar, data []byte, size string) (s
 
 // ClearAvatarFiles removes all unneeded files from S3
 func ClearAvatarFiles(avatar Avatar) error {
-	bucket := getS3Bucket()
+	client := getS3()
 
 	sizes := avatar.Sizes
 
 	for _, size := range sizes {
 		path := avatar.GetPath(size)
-		err := bucket.Del(path)
+		_, err := client.DeleteObject(&s3.DeleteObjectInput{
+			Bucket: aws.String(getBucketName()),
+			Key:    aws.String(path),
+		})
 		if err != nil {
 			return err
 		}

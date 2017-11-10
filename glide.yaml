@@ -16,11 +16,6 @@ import:
   - bmp
   - tiff
   - tiff/lzw
-- package: gopkg.in/amz.v1
-  version: ^1.0.0
-  subpackages:
-  - aws
-  - s3
 - package: github.com/gin-gonic/gin
   version: ^1.0.0
 - package: github.com/jinzhu/gorm

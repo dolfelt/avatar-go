@@ -2,6 +2,7 @@
   "AwsKey": "",
   "AwsSecret": "",
   "AwsBucket": "s3-bucket.example.com",
+  "AwsBucketRegion": "us-east-1",
   "Store": "postgres|dynamodb",
   "TableName": "avatars",
   "DBUser": "docker",
