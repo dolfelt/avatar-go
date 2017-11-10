@@ -10,6 +10,6 @@
   "DBHost": "db",
   "DBPort": "5432",
   "DBDatabase": "avatars",
-  "DefaultAvatar": "run ./install.sh setdefault <file> to upload a default avatar"
+  "DefaultAvatar": {},
   "JwtKey": "your-signing-key"
 }

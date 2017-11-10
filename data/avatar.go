@@ -47,15 +47,6 @@ func (a *Avatar) Save(db DB) error {
 	return nil
 }
 
-// DefaultAvatar returns the default placeholder object for no avatar
-func DefaultAvatar(app *Application) *Avatar {
-	return &Avatar{
-		Hash:  "7505d64a54e061b7acd54ccd58b49dc43500b635",
-		Type:  "jpg",
-		Sizes: DefaultSizeKeys(),
-	}
-}
-
 // GetURL gets the full URL of the avatar object for a given size, including
 // the S3 bucket path.
 func (a Avatar) GetURL(size string, bucket string) string {

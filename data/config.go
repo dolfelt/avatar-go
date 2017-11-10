@@ -8,6 +8,9 @@ import (
 	"github.com/spf13/viper"
 )
 
+// DefaultAvatar is the placeholder when no avatar can be found
+var DefaultAvatar *Avatar
+
 // Application holds all the info for the app
 type Application struct {
 	DB    DB
@@ -31,6 +34,12 @@ func LoadConfig(path string) error {
 
 	loadDefaultSettings()
 
+	DefaultAvatar = &Avatar{
+		Hash:  viper.GetString("DefaultAvatar.Hash"),
+		Type:  viper.GetString("DefaultAvatar.Type"),
+		Sizes: viper.GetStringSlice("DefaultAvatar.Sizes"),
+	}
+
 	return nil
 }
 
@@ -47,6 +56,11 @@ func loadDefaultSettings() {
 
 	// S3 Storage Config
 	viper.SetDefault("AwsBucketRegion", "us-east-1")
+
+	// Default avatar settings
+	viper.SetDefault("DefaultAvatar.Hash", "7505d64a54e061b7acd54ccd58b49dc43500b635")
+	viper.SetDefault("DefaultAvatar.Type", "png")
+	viper.SetDefault("DefaultAvatar.Sizes", DefaultSizeKeys())
 
 	viper.SetDefault("Port", 3000)
 	viper.SetDefault("Debug", false)

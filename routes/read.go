@@ -34,7 +34,7 @@ func read(app *data.Application) gin.HandlerFunc {
 
 		// Do default fallback to something
 		if avatar == nil {
-			avatar = data.DefaultAvatar(app)
+			avatar = data.DefaultAvatar
 			if len(avatar.Hash) == 0 || len(avatar.Sizes) == 0 {
 				c.AbortWithStatus(http.StatusNotFound)
 				return
